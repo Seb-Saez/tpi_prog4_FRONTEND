@@ -1,13 +1,21 @@
-// import { StrictMode } from 'react'
-// import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.tsx'
-import ReactDom from "react-dom/client"
-import { BrowserRouter } from 'react-router-dom'
+import "./index.css"
+import App from "./App"
+import ReactDOM from "react-dom/client"
+// importamos Browser router para que funcionen las rutas
+import { BrowserRouter } from "react-router-dom"
+// importamos QueryClient y QueryClientProvider para que funcione react-query
+import {
+  QueryClient,
+  QueryClientProvider
+} from "@tanstack/react-query"
 
+const queryClient = new QueryClient()
 
-ReactDom.createRoot(document.getElementById("root")!).render(
-  <BrowserRouter>
-    <App />
-  </BrowserRouter>
+ReactDOM.createRoot(document.getElementById("root")!).render(
+  // el querryclientprvider nos va a permitir usar useQuery y useMutation
+  <QueryClientProvider client={queryClient}>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </QueryClientProvider>
 )

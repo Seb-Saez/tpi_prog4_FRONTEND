@@ -1,13 +1,11 @@
-import { useEffect, useState } from "react";
-import type { Categoria } from "../../types/categoria";
-
+import { useEffect, useState } from "react"
+import type { Categoria } from "../../types"
 
 type CategoriaModalProps = {
-    isOpen: boolean
-    onClose: () => void
-    onSubmit: (data: Omit<Categoria, "id">, id?: number) => void
-    categoria?: Categoria | null 
-
+  isOpen: boolean
+  onClose: () => void
+  onSubmit: (data: Omit<Categoria, "id">, id?: number) => void
+  categoria?: Categoria | null
 }
 
 const CategoriaModal = ({
@@ -18,71 +16,127 @@ const CategoriaModal = ({
 }: CategoriaModalProps) => {
   const [nombre, setNombre] = useState("")
   const [descripcion, setDescripcion] = useState("")
+  const [imagenUrl, setImagenUrl] = useState("")
+  const [parentId, setParentId] = useState("")
 
-  // si estamos editando cargamos los datos
   useEffect(() => {
     if (categoria) {
       setNombre(categoria.nombre)
       setDescripcion(categoria.descripcion || "")
+      setImagenUrl(categoria.imagen_url || "")
+      setParentId(categoria.parent_id ? String(categoria.parent_id) : "")
     } else {
       setNombre("")
       setDescripcion("")
+      setImagenUrl("")
+      setParentId("")
     }
   }, [categoria, isOpen])
 
-  // evitamos que renderice si esta cerrado
   if (!isOpen) return null
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault()
+    e.preventDefault()
 
-  onSubmit(
-    {
-      nombre,
-      descripcion
-    },
-    categoria?.id
-  )
-}
+    onSubmit(
+      {
+        nombre,
+        descripcion,
+        imagen_url: imagenUrl || undefined,
+        parent_id: parentId ? Number(parentId) : null
+      },
+      categoria?.id
+    )
+  }
 
-return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-zinc-900 rounded-xl p-6 w-full max-w-md shadow-lg border border-zinc-700">
-        
-        <h2 className="text-lg font-semibold text-indigo-300 mb-4">
-          {categoria ? "Editar Categoría" : "Nueva Categoría"}
-        </h2>
+  return (
+    <div className="fixed inset-0 bg-stone-900/50 backdrop-blur-sm flex items-center justify-center z-50 px-4">
+      <div className="w-full max-w-lg rounded-2xl border border-stone-200 bg-[#F8F4EE] shadow-2xl">
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          
-          <input
-            type="text"
-            placeholder="Nombre"
-            value={nombre}
-            onChange={(e) => setNombre(e.target.value)}
-            required
-            className="bg-zinc-800 text-zinc-100 px-3 py-2 rounded-md border border-zinc-700 focus:outline-none focus:ring-2 focus:ring-indigo-400"
-          />
+        {/* Header */}
+        <div className="border-b border-stone-200 px-6 py-5">
+          <h2 className="text-xl font-semibold text-stone-800">
+            {categoria ? "Editar categoría" : "Nueva categoría"}
+          </h2>
+          <p className="text-sm text-stone-500 mt-1">
+            Completá los datos de la categoría
+          </p>
+        </div>
 
-          <textarea
-            placeholder="Descripción"
-            value={descripcion}
-            onChange={(e) => setDescripcion(e.target.value)}
-            className="bg-zinc-800 text-zinc-100 px-3 py-2 rounded-md border border-zinc-700 focus:outline-none focus:ring-2 focus:ring-indigo-400"
-          />
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="px-6 py-5 space-y-5">
 
-          <div className="flex justify-end gap-2 mt-2">
+          {/* Nombre */}
+          <div className="flex flex-col gap-2">
+            <label className="text-sm font-medium text-stone-700">
+              Nombre *
+            </label>
+            <input
+              type="text"
+              value={nombre}
+              onChange={(e) => setNombre(e.target.value)}
+              required
+              className="w-full rounded-xl border border-stone-300 bg-white px-4 py-3 text-stone-800 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 transition"
+              placeholder="Ej: Pizzas"
+            />
+          </div>
+
+          {/* Descripción */}
+          <div className="flex flex-col gap-2">
+            <label className="text-sm font-medium text-stone-700">
+              Descripción
+            </label>
+            <textarea
+              value={descripcion}
+              onChange={(e) => setDescripcion(e.target.value)}
+              rows={3}
+              className="w-full rounded-xl border border-stone-300 bg-white px-4 py-3 text-stone-800 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 transition resize-none"
+              placeholder="Breve descripción de la categoría"
+            />
+          </div>
+
+          {/* Imagen URL */}
+          <div className="flex flex-col gap-2">
+            <label className="text-sm font-medium text-stone-700">
+              URL de imagen
+            </label>
+            <input
+              type="text"
+              value={imagenUrl}
+              onChange={(e) => setImagenUrl(e.target.value)}
+              className="w-full rounded-xl border border-stone-300 bg-white px-4 py-3 text-stone-800 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 transition"
+              placeholder="https://..."
+            />
+          </div>
+
+          {/* Parent ID */}
+          <div className="flex flex-col gap-2">
+            <label className="text-sm font-medium text-stone-700">
+              ID categoría padre (opcional)
+            </label>
+            <input
+              type="number"
+              value={parentId}
+              onChange={(e) => setParentId(e.target.value)}
+              min="1"
+              className="w-full rounded-xl border border-stone-300 bg-white px-4 py-3 text-stone-800 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 transition"
+              placeholder="Ej: 1"
+            />
+          </div>
+
+          {/* Footer */}
+          <div className="flex justify-end gap-3 pt-4 border-t border-stone-200">
             <button
               type="button"
               onClick={onClose}
-              className="px-3 py-1 text-sm rounded-md text-zinc-400 hover:text-white"
+              className="rounded-xl px-5 py-2.5 text-sm font-medium text-stone-600 hover:text-stone-800 hover:bg-stone-100 transition"
             >
               Cancelar
             </button>
 
             <button
               type="submit"
-              className="px-4 py-1 text-sm rounded-md bg-indigo-400/20 text-indigo-300 hover:bg-indigo-400/30"
+              className="rounded-xl bg-emerald-600 px-6 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-emerald-700 transition"
             >
               Guardar
             </button>

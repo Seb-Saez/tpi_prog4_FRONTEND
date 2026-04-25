@@ -1,1 +1,51 @@
 @import "tailwindcss";
+
+:root {
+  --color-beige: #eee3d4;
+  --color-brown: #6b5840;
+  --color-green: #A8D5BA;
+  --color-beige-light: #d4cdbd;
+  --color-brown-light: #D4C5B9;
+  --color-error-light: #e2988a;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--color-beige-light);
+  color: var(--color-brown);
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+button {
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+th {
+  padding: 0.5rem 1rem;
+}
+
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-beige);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-brown-light);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-brown);
+}
